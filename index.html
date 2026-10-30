@@ -35,16 +35,14 @@
       <section>
         <p class="label">Polyhedron</p>
         <dl class="facts">
-          <dt>Shape</dt><dd id="f-type">–</dd>
-          <dt>Vertices · edges</dt><dd id="f-ve">–</dd>
           <dt>Volume</dt><dd id="f-vol">–</dd>
           <dt>Shortest edge length</dt><dd id="f-edge">–</dd>
-          <dt>max |area − |<i>v<sub>i</sub></i>||</dt><dd id="f-err">–</dd>
+          <dt># Edges</dt><dd id="f-edges">–</dd>
+          <dt># Vertices</dt><dd id="f-verts">–</dd>
         </dl>
       </section>
 
       <section class="toggles" aria-label="Display options">
-        <label><input type="checkbox" id="t-poly" checked> Polyhedron</label>
         <label><input type="checkbox" id="t-stubs" checked> Normals on faces</label>
         <label><input type="checkbox" id="t-axes" checked> Axes</label>
         <label><input type="checkbox" id="t-origin" checked> Normals at the origin</label>
@@ -68,7 +66,7 @@
   // ---------- state ----------
   // Parameters are in units of π: the angle used is π times the slider value.
   const params = { a: 0.5, b: 0.5, c: 1/3, d: 0.5, e: 5/3 };
-  const show = { poly: true, stubs: true, axes: true, origin: true };
+  const show = { stubs: true, axes: true, origin: true };
   const STUB = 0.4;   // length of the normal drawn on each face
   let cacheKey = "", state = null, warm = null;
 
@@ -96,8 +94,8 @@
     state = r;
     return r;
   }
-  // Where face normals are drawn (polyhedron and normals on, face present).
-  const stubShown = i => { const s = compute(); return show.poly && show.stubs && s.ok && s.visible[i]; };
+  // Where face normals are drawn (normals on, face present).
+  const stubShown = i => { const s = compute(); return show.stubs && s.ok && s.visible[i]; };
 
   // ---------- theme ----------
   function tokens() {
@@ -191,7 +189,7 @@
         layer: 12, fillColor: T.v[i], fillOpacity: 0.26, strokeColor: T.edge, strokeOpacity: 0.75, strokeWidth: 1.3,
         highlight: false, fixed: true,
         borders: { strokeColor: T.edge, strokeOpacity: 0.75, strokeWidth: 1.3, highlight: false },
-        visible: () => show.poly && compute().ok && compute().visible[i]
+        visible: () => compute().ok && compute().visible[i]
       });
     }
 
@@ -247,7 +245,7 @@
     const merged = s.groups.some(G => G.members.length > 1);
     if (!s.ok) {
       warnEl.textContent = s.problem; warnEl.hidden = false;
-      ["f-type", "f-ve", "f-vol", "f-edge", "f-err"].forEach(id => document.getElementById(id).textContent = "–");
+      ["f-verts", "f-edges", "f-vol", "f-edge"].forEach(id => document.getElementById(id).textContent = "–");
       return;
     }
     if (merged) {
@@ -255,15 +253,14 @@
       warnEl.textContent = "* " + m + " point the same way, so they share one face whose area is the sum.";
       warnEl.hidden = false;
     } else warnEl.hidden = true;
-    document.getElementById("f-type").textContent = s.shape;
-    document.getElementById("f-ve").textContent = s.nVerts + " · " + s.nEdges;
+    document.getElementById("f-verts").textContent = s.nVerts;
+    document.getElementById("f-edges").textContent = s.nEdges;
     document.getElementById("f-vol").textContent = s.vol.toFixed(4);
     document.getElementById("f-edge").textContent = s.minEdge.toFixed(4);
-    document.getElementById("f-err").textContent = s.err.toExponential(1);
   }
 
   // ---------- toggles ----------
-  [["t-poly", "poly"], ["t-stubs", "stubs"], ["t-axes", "axes"], ["t-origin", "origin"]].forEach(([id, k]) => {
+  [["t-stubs", "stubs"], ["t-axes", "axes"], ["t-origin", "origin"]].forEach(([id, k]) => {
     const el = document.getElementById(id);
     el.addEventListener("change", () => { show[k] = el.checked; if (board3d) board3d.fullUpdate(); });
   });
