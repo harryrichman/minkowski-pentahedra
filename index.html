@@ -1,107 +1,9 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>Minkowski Pentahedron</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=STIX+Two+Text:ital,wght@0,500;0,600;1,500&display=swap">
-<style>
-/* Layout: a square 3D stage beside a narrow instrument panel (sliders, then the five vectors as a ledger); stacks on phones. */
-:root {
-  --bg: #f6f7f9;
-  --surface: #ffffff;
-  --fg: #1b2330;
-  --muted: #5d6878;
-  --line: #d9dee6;
-  --grid: #e6e9ef;
-  --axis: #8a94a3;
-  --edge: #2a3443;
-  --v1: #2f6fd0;
-  --v2: #c77a12;
-  --v3: #23895c;
-  --v4: #a443b4;
-  --v5: #cf3b33;
-  --font-display: "STIX Two Text", "STIX Two", "Cambria", Georgia, serif;
-  --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-data: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #12161d; --surface: #191f28; --fg: #e4e8ee; --muted: #98a2b1; --line: #2c3542;
-    --grid: #232b36; --axis: #6c7787; --edge: #cfd6e0;
-    --v1: #6aa1f2; --v2: #e8a54a; --v3: #4fc08c; --v4: #cf7ddc; --v5: #f06b62;
-    color-scheme: dark;
-  }
-}
-:root[data-theme="dark"] {
-  --bg: #12161d; --surface: #191f28; --fg: #e4e8ee; --muted: #98a2b1; --line: #2c3542;
-  --grid: #232b36; --axis: #6c7787; --edge: #cfd6e0;
-  --v1: #6aa1f2; --v2: #e8a54a; --v3: #4fc08c; --v4: #cf7ddc; --v5: #f06b62;
-  color-scheme: dark;
-}
-* { box-sizing: border-box; }
-body {
-  background: var(--bg); color: var(--fg);
-  font-family: var(--font-body); font-size: 15px; line-height: 1.5;
-}
-.wrap {
-  max-width: 1180px; margin: 0 auto;
-  padding-block: 24px 40px;
-  padding-left: max(16px, env(safe-area-inset-left, 0px));
-  padding-right: max(16px, env(safe-area-inset-right, 0px));
-  display: grid; gap: 20px;
-}
-header { display: grid; gap: 6px; max-width: 70ch; }
-h1 {
-  font-family: var(--font-display); font-weight: 600; font-size: 1.9rem; line-height: 1.15;
-  margin: 0; text-wrap: balance; letter-spacing: -0.005em;
-}
-.lede { margin: 0; color: var(--muted); }
-.math { font-family: var(--font-display); font-style: italic; font-size: 1.08em; }
-.main { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 20px; align-items: start; }
-@media (max-width: 860px) { .main { grid-template-columns: minmax(0, 1fr); } }
-.stage {
-  position: relative; background: var(--surface); border: 1px solid var(--line); border-radius: 6px;
-  aspect-ratio: 1 / 1; max-width: 100%; width: 100%; overflow: hidden;
-}
-#box3d { position: absolute; inset: 0; }
-.hint {
-  position: absolute; left: 12px; bottom: 10px; margin: 0; pointer-events: none;
-  font-size: 12px; color: var(--muted); letter-spacing: 0.02em;
-}
-.warn {
-  position: absolute; left: 12px; right: 12px; top: 12px; margin: 0; padding: 8px 10px;
-  background: var(--bg); border: 1px solid var(--v5); border-radius: 4px; font-size: 13px;
-}
-.panel { display: grid; gap: 18px; min-width: 0; }
-.label {
-  font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted);
-  margin: 0 0 6px;
-}
-#sliders { width: 100%; height: 232px; touch-action: none; }
-.ledger { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
-.ledger th, .ledger td { padding: 6px 4px; text-align: right; border-bottom: 1px solid var(--line); }
-.ledger th { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
-.ledger th:first-child, .ledger td:first-child { text-align: left; }
-.ledger td { font-family: var(--font-data); font-size: 13px; }
-.ledger td.name { font-family: var(--font-display); font-style: italic; font-size: 16px; white-space: nowrap; }
-.sw { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 8px; vertical-align: 0; }
-.ledger tr.closing td { color: var(--fg); font-weight: 500; }
-.facts { display: grid; grid-template-columns: auto 1fr; gap: 4px 14px; margin: 0; font-size: 14px; }
-.facts dt { color: var(--muted); }
-.facts dd { margin: 0; font-family: var(--font-data); font-size: 13px; text-align: right; font-variant-numeric: tabular-nums; }
-.toggles { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 14px; }
-.toggles label { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
-.toggles input:focus-visible { outline: 2px solid var(--v1); outline-offset: 2px; }
-.notes { max-width: 70ch; color: var(--muted); font-size: 14px; display: grid; gap: 8px; }
-.notes p { margin: 0; }
-.jxgbox { position: relative; overflow: hidden; background: transparent; border: none; touch-action: none; }
-.jxgbox:focus-visible { outline: 2px solid var(--v1); outline-offset: -2px; }
-.slabel { font-family: var(--font-data); font-size: 13px; color: var(--fg); white-space: nowrap; }
-.slabel i { font-family: var(--font-display); font-size: 17px; }
-.vlab { font-family: var(--font-display); font-style: italic; font-size: 16px; font-weight: 500; }
-.vlab sub { font-style: normal; font-size: 11px; }
-.alab { font-family: var(--font-display); font-style: italic; font-size: 14px; color: var(--axis); }
-</style>
+<link rel="stylesheet" href="styles.css">
 
 <div class="wrap">
   <header>
@@ -118,7 +20,7 @@ h1 {
 
     <div class="panel">
       <section>
-        <p class="label">Parameters (multiples of <span style="text-transform: none">π</span>)</p>
+        <p class="label">Parameters (multiples of <span class="keep-case">π</span>)</p>
         <div id="sliders" class="jxgbox" aria-label="Sliders for a, b, c, d, e"></div>
       </section>
 
@@ -157,209 +59,45 @@ h1 {
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/jsxgraph@1.12.2/distrib/jsxgraphcore.js"></script>
+<script src="geometry.js"></script>
 <script>
+// Drawing and page wiring. All geometry comes from Pentahedron.analyze (geometry.js).
 (function () {
   "use strict";
 
-  // ---------- vector algebra ----------
-  const dot = (a, b) => a[0]*b[0] + a[1]*b[1] + a[2]*b[2];
-  const cross = (a, b) => [a[1]*b[2]-a[2]*b[1], a[2]*b[0]-a[0]*b[2], a[0]*b[1]-a[1]*b[0]];
-  const sub = (a, b) => [a[0]-b[0], a[1]-b[1], a[2]-b[2]];
-  const norm = a => Math.sqrt(dot(a, a));
-
-  // Polytope {x : u_i . x <= h_i}: vertices, ordered face polygons, face areas, volume.
-  function polytope(U, h) {
-    const n = U.length, verts = [];
-    const scale = Math.max(1, ...h.map(Math.abs));
-    for (let i = 0; i < n; i++) for (let j = i+1; j < n; j++) for (let k = j+1; k < n; k++) {
-      const c1 = cross(U[j], U[k]), det = dot(U[i], c1);
-      if (Math.abs(det) < 1e-12) continue;
-      const c2 = cross(U[k], U[i]), c3 = cross(U[i], U[j]);
-      const x = [0, 1, 2].map(t => (h[i]*c1[t] + h[j]*c2[t] + h[k]*c3[t]) / det);
-      let inside = true;
-      for (let m = 0; m < n; m++) if (dot(U[m], x) > h[m] + 1e-9*scale) { inside = false; break; }
-      if (!inside || verts.some(v => norm(sub(v, x)) < 1e-7*scale)) continue;
-      verts.push(x);
-    }
-    const faces = [], areas = [];
-    let vol = 0;
-    for (let i = 0; i < n; i++) {
-      const on = verts.filter(v => Math.abs(dot(U[i], v) - h[i]) < 1e-7*scale);
-      if (on.length < 3) { faces.push(on); areas.push(0); continue; }
-      const c = [0, 1, 2].map(t => on.reduce((s, v) => s + v[t], 0) / on.length);
-      let e1 = sub(on[0], c); const l1 = norm(e1) || 1; e1 = e1.map(t => t / l1);
-      const e2 = cross(U[i], e1);
-      const ang = p => Math.atan2(dot(sub(p, c), e2), dot(sub(p, c), e1));
-      on.sort((p, q) => ang(p) - ang(q));
-      let A = 0;
-      for (let t = 0; t < on.length; t++) A += dot(U[i], cross(sub(on[t], c), sub(on[(t+1) % on.length], c))) / 2;
-      faces.push(on); areas.push(Math.max(A, 0)); vol += h[i] * A / 3;
-    }
-    return { verts, faces, areas, vol };
-  }
-
-  const meanPt = pts => [0, 1, 2].map(t => pts.reduce((s, x) => s + x[t], 0) / pts.length);
-
-  // Centre of area of a convex polygon (vertices in order), by fan triangulation.
-  function faceCentroid(poly) {
-    const o = poly[0], acc = [0, 0, 0];
-    let A = 0;
-    for (let t = 1; t < poly.length - 1; t++) {
-      const w = norm(cross(sub(poly[t], o), sub(poly[t+1], o)));
-      A += w;
-      for (let k = 0; k < 3; k++) acc[k] += w * (o[k] + poly[t][k] + poly[t+1][k]) / 3;
-    }
-    return A > 1e-14 ? acc.map(x => x / A) : meanPt(poly);
-  }
-
-  // Centre of mass of a convex polytope, by tetrahedra from an interior point.
-  function solidCentroid(P) {
-    const r = meanPt(P.verts), acc = [0, 0, 0];
-    let V = 0;
-    P.faces.forEach(f => {
-      if (f.length < 3) return;
-      for (let t = 1; t < f.length - 1; t++) {
-        const w = Math.abs(dot(sub(f[0], r), cross(sub(f[t], r), sub(f[t+1], r))));
-        V += w;
-        for (let k = 0; k < 3; k++) acc[k] += w * (r[k] + f[0][k] + f[t][k] + f[t+1][k]) / 4;
-      }
-    });
-    return V > 1e-14 ? acc.map(x => x / V) : r;
-  }
-
-  // Maximize log V(h) - 3 log(sum A_i h_i) (concave, scale invariant); the optimum has areas proportional to A.
-  function solveMinkowski(U, A, h0) {
-    const n = U.length;
-    const S = hh => hh.reduce((s, x, i) => s + A[i]*x, 0);
-    const f = hh => { const P = polytope(U, hh); return { v: P.vol > 0 ? Math.log(P.vol) - 3*Math.log(S(hh)) : -Infinity, P }; };
-    let h = (h0 && h0.length === n) ? h0.slice() : new Array(n).fill(1);
-    let cur = f(h);
-    if (!isFinite(cur.v)) { h = new Array(n).fill(1); cur = f(h); }
-    if (!isFinite(cur.v)) return null;
-    let step = 1;
-    for (let it = 0; it < 500; it++) {
-      const P = cur.P, s = S(h);
-      const ratio = P.areas.map((F, i) => F / A[i]);
-      const mean = ratio.reduce((x, y) => x + y, 0) / n;
-      if (Math.max(...ratio.map(r => Math.abs(r/mean - 1))) < 1e-10) break;
-      const g = P.areas.map((F, i) => F / P.vol - 3*A[i] / s);
-      let moved = false;
-      for (let tries = 0; tries < 40; tries++) {
-        const hn = h.map((x, i) => x + step*g[i]);
-        const nx = f(hn);
-        if (nx.v > cur.v) { const k = 1 / S(hn); h = hn.map(x => x*k); cur = f(h); step *= 2; moved = true; break; }
-        step /= 4;
-      }
-      if (!moved) break;
-    }
-    const tot = cur.P.areas.reduce((x, y) => x + y, 0) / A.reduce((x, y) => x + y, 0);
-    if (!(tot > 0)) return null;
-    const k = 1 / Math.sqrt(tot);
-    h = h.map(x => x*k);
-    return { h, P: polytope(U, h) };
-  }
-
   // ---------- state ----------
   // Parameters are in units of π: the angle used is π times the slider value.
-  const params = { a: 0.64, b: 0.64, c: 0.32, d: 0.64, e: 1.27 };
+  const params = { a: 0.5, b: 0.5, c: 1/3, d: 0.5, e: 5/3 };
   const show = { poly: true, stubs: true, axes: true, origin: true };
-  // Where face normals are drawn as stubs (polyhedron and stubs on, face present).
-  const stubShown = i => { const s = compute(); return show.poly && show.stubs && s.ok && s.visible[i]; };
-  let cacheKey = "", state = null, warmH = null, warmKey = "";
-  const STUB = 0.4;
+  const STUB = 0.4;   // length of the normal drawn on each face
+  let cacheKey = "", state = null, warm = null;
 
-  function vectors(p) {
-    const v = [
-      [0, 0, -1],
-      [-Math.sin(Math.PI*p.a), 0, Math.cos(Math.PI*p.a)],
-      [Math.sin(Math.PI*p.b)*Math.cos(Math.PI*p.c), Math.sin(Math.PI*p.b)*Math.sin(Math.PI*p.c), Math.cos(Math.PI*p.b)],
-      [Math.sin(Math.PI*p.d)*Math.cos(Math.PI*p.e), Math.sin(Math.PI*p.d)*Math.sin(Math.PI*p.e), Math.cos(Math.PI*p.d)]
-    ];
-    v.push([0, 1, 2].map(t => -(v[0][t] + v[1][t] + v[2][t] + v[3][t])));
-    return v;
-  }
-
+  // Analyze the current parameters once per change, and shape the result for the board elements,
+  // which need a fixed number of points per face (padded to 4) and a start and end for each face normal.
   function compute() {
     const key = [params.a, params.b, params.c, params.d, params.e].join(",");
     if (key === cacheKey && state) return state;
     cacheKey = key;
-    const v = vectors(params);
-    const len = v.map(norm);
-
-    // Group vectors by direction: parallel normals belong to the same face (areas add).
-    const groups = [];      // {u, A, members}
-    const groupOf = [];
+    const r = Pentahedron.analyze(params, warm);
+    warm = r.warm;
+    const zero = [0, 0, 0];
+    r.faceVerts = []; r.stub = []; r.visible = [];
     for (let i = 0; i < 5; i++) {
-      if (len[i] < 1e-9) { groupOf.push(-1); continue; }
-      const u = v[i].map(t => t / len[i]);
-      let g = groups.findIndex(G => dot(G.u, u) > 1 - 1e-9);
-      if (g < 0) { groups.push({ u, A: 0, members: [] }); g = groups.length - 1; }
-      groups[g].A += len[i]; groups[g].members.push(i);
-      groupOf.push(g);
+      const f = r.ok ? r.faces[i] : null;
+      r.visible.push(!!(f && f.primary));
+      const pad = f && f.poly.length ? f.poly.slice() : [zero];
+      while (pad.length < 4) pad.push(pad[pad.length - 1]);
+      r.faceVerts.push(pad);
+      if (f && f.centroid) {
+        const c = f.centroid, u = f.normal;
+        r.stub.push([c, c.map((t, k) => t + STUB*u[k])]);
+      } else r.stub.push([zero, zero]);
     }
-    const U = groups.map(G => G.u), A = groups.map(G => G.A);
-
-    // Spread of the normals: the largest |det| over triples; zero means coplanar.
-    let spread = 0;
-    for (let i = 0; i < U.length; i++) for (let j = i+1; j < U.length; j++) for (let k = j+1; k < U.length; k++)
-      spread = Math.max(spread, Math.abs(dot(U[i], cross(U[j], U[k]))));
-
-    let sol = null, problem = "";
-    if (U.length < 4 || spread < 1e-6) problem = "The normals are coplanar, so no bounded polyhedron has them as face normals.";
-    else {
-      const gk = groups.map(G => G.members.join("")).join("|");
-      sol = solveMinkowski(U, A, gk === warmKey ? warmH : null);
-      if (sol) { warmH = sol.h; warmKey = gk; }
-      else problem = "The solver did not converge for these parameters.";
-    }
-
-    const out = { v, len, groupOf, groups, ok: false, problem, faceVerts: [], stub: [], visible: [] };
-    if (sol) {
-      const P = sol.P;
-      // Centre on the centre of mass, which moves continuously when an edge collapses (the vertex average does not).
-      const cen = solidCentroid(P);
-      const diam = Math.max(...P.verts.map(x => norm(sub(x, cen)))) * 2;
-      const err = Math.max(...P.areas.map((F, g) => Math.abs(F - A[g])));
-      if (diam > 30) out.problem = "The normals are nearly coplanar, so the polyhedron is extremely long (diameter " + diam.toFixed(0) + "). Move a slider to bring it back.";
-      else if (err > 1e-4) out.problem = "The solver did not converge for these parameters.";
-      else {
-        out.ok = true;
-        out.err = err; out.vol = P.vol; out.nVerts = P.verts.length;
-        // Edges are consecutive vertex pairs around each face polygon.
-        // Each edge appears in two faces, so it is seen twice here.
-        const edgeLens = [];
-        P.faces.forEach(f => { if (f.length >= 3) for (let t = 0; t < f.length; t++) edgeLens.push(norm(sub(f[t], f[(t + 1) % f.length]))); });
-        const minEdge = Math.min(...edgeLens);
-        // A square pyramid is a prism with exactly one edge collapsed to a point.
-        // A prism with exactly one edge shorter than PYRAMID_TOL is reported as a square pyramid.
-        // Requiring a single short edge keeps a prism with a tiny triangular face (|v5| near 0) from counting.
-        const PYRAMID_TOL = 0.01;
-        const shortEdges = edgeLens.filter(l => l < PYRAMID_TOL).length / 2;
-        const pyramid = groups.length === 5 && (P.verts.length === 5 || (P.verts.length === 6 && shortEdges === 1));
-        if (pyramid) out.nVerts = 5;
-        out.minEdge = pyramid ? 0 : minEdge;
-        out.nEdges = out.nVerts + groups.length - 2;
-        out.diam = diam;
-        for (let i = 0; i < 5; i++) {
-          const g = groupOf[i];
-          const first = g >= 0 && groups[g].members[0] === i;
-          const poly = g >= 0 ? P.faces[g].map(x => sub(x, cen)) : [];
-          out.visible.push(first && poly.length >= 3);
-          const pad = poly.length ? poly.slice() : [[0, 0, 0]];
-          while (pad.length < 4) pad.push(pad[pad.length - 1]);
-          out.faceVerts.push(pad);
-          if (g >= 0 && poly.length >= 3) {
-            const c = faceCentroid(poly);
-            const u = groups[g].u;
-            out.stub.push([c, c.map((t, k) => t + STUB*u[k])]);
-          } else out.stub.push([[0, 0, 0], [0, 0, 0]]);
-        }
-      }
-    }
-    if (!out.ok) for (let i = 0; i < 5; i++) { out.visible.push(false); out.faceVerts.push([[0,0,0],[0,0,0],[0,0,0],[0,0,0]]); out.stub.push([[0,0,0],[0,0,0]]); }
-    state = out;
-    return out;
+    state = r;
+    return r;
   }
+  // Where face normals are drawn (polyhedron and normals on, face present).
+  const stubShown = i => { const s = compute(); return show.poly && show.stubs && s.ok && s.visible[i]; };
 
   // ---------- theme ----------
   function tokens() {
@@ -404,7 +142,12 @@ h1 {
       sliders[name] = s;
     });
     sboard.on("update", function () {
-      Object.keys(sliders).forEach(k => { params[k] = sliders[k].Value(); });
+      // Take a slider's value only once it has really moved, so exact defaults such as 1/3
+      // are not replaced by the slider's 0.001-snapped reading (0.333) before anyone drags it.
+      Object.keys(sliders).forEach(k => {
+        const val = sliders[k].Value();
+        if (Math.abs(val - params[k]) > 0.0005) params[k] = val;
+      });
     });
 
     // 3D board
@@ -462,7 +205,7 @@ h1 {
       // Label sits at the origin vector's tip, or at the face normal's tip when origin vectors are hidden.
       view.create("text3d", [() => {
         const s = compute();
-        if (!show.origin && stubShown(i)) { const u = s.groups[s.groupOf[i]].u; return s.stub[i][1].map((t, k) => t + 0.14 * u[k]); }
+        if (!show.origin && stubShown(i)) { const u = s.faces[i].normal; return s.stub[i][1].map((t, k) => t + 0.14 * u[k]); }
         const L = s.len[i] || 1; return s.v[i].map(t => t * (1 + 0.16 / L));
       }, "<span class='vlab'>v<sub>" + (i + 1) + "</sub></span>"], {
         cssClass: "vlab", highlightCssClass: "vlab", strokeColor: T.v[i], highlightStrokeColor: T.v[i], fixed: true, anchorX: "middle", anchorY: "middle",
@@ -485,12 +228,6 @@ h1 {
 
   // ---------- panel ----------
   const fmt = x => (Math.abs(x) < 5e-4 ? 0 : x).toFixed(3).replace("-", "−");
-  const shapeName = (nf, nv) => {
-    if (nf === 5 && nv === 6) return "triangular prism";
-    if (nf === 5 && nv === 5) return "square pyramid";
-    if (nf === 4 && nv === 4) return "tetrahedron";
-    return nf + " faces";
-  };
   let lastPanel = "";
   function renderPanel() {
     const s = compute();
@@ -506,19 +243,19 @@ h1 {
         "<td>" + fmt(v[0]) + "</td><td>" + fmt(v[1]) + "</td><td>" + fmt(v[2]) + "</td><td>" + area + "</td></tr>";
     }).join("");
     document.getElementById("ledger").innerHTML = rows;
-    const warn = document.getElementById("warn");
+    const warnEl = document.getElementById("warn");
     const merged = s.groups.some(G => G.members.length > 1);
     if (!s.ok) {
-      warn.textContent = s.problem; warn.hidden = false;
+      warnEl.textContent = s.problem; warnEl.hidden = false;
       ["f-type", "f-ve", "f-vol", "f-edge", "f-err"].forEach(id => document.getElementById(id).textContent = "–");
       return;
     }
     if (merged) {
       const m = s.groups.filter(G => G.members.length > 1).map(G => G.members.map(i => "v" + (i + 1)).join(" and ")).join("; ");
-      warn.textContent = "* " + m + " point the same way, so they share one face whose area is the sum.";
-      warn.hidden = false;
-    } else warn.hidden = true;
-    document.getElementById("f-type").textContent = shapeName(s.groups.length, s.nVerts);
+      warnEl.textContent = "* " + m + " point the same way, so they share one face whose area is the sum.";
+      warnEl.hidden = false;
+    } else warnEl.hidden = true;
+    document.getElementById("f-type").textContent = s.shape;
     document.getElementById("f-ve").textContent = s.nVerts + " · " + s.nEdges;
     document.getElementById("f-vol").textContent = s.vol.toFixed(4);
     document.getElementById("f-edge").textContent = s.minEdge.toFixed(4);
@@ -533,9 +270,15 @@ h1 {
 
   // ---------- start, and rebuild on theme change ----------
   function start() {
+    const warnEl = document.getElementById("warn");
     if (!window.JXG) {
-      document.getElementById("warn").textContent = "The JSXGraph library could not be loaded, so the 3D view is unavailable.";
-      document.getElementById("warn").hidden = false;
+      warnEl.textContent = "The JSXGraph library could not be loaded, so the 3D view is unavailable.";
+      warnEl.hidden = false;
+      return;
+    }
+    if (!window.Pentahedron) {
+      warnEl.textContent = "geometry.js could not be loaded, so the polyhedron cannot be computed.";
+      warnEl.hidden = false;
       return;
     }
     build();
@@ -547,5 +290,3 @@ h1 {
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start); else start();
 })();
 </script>
-
-</body></html>
